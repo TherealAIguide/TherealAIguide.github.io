@@ -18,15 +18,20 @@
             font-weight: bold;
         }
         .subscribe-btn {
-            background-color: #4F46E5;
+            background-color: #B8B8B8; /* Gray (disabled) */
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: bold;
             text-align: center;
+            cursor: not-allowed;
             transition: background-color 0.3s;
         }
-        .subscribe-btn:hover {
+        .subscribe-btn.enabled {
+            background-color: #4F46E5; /* Purple (enabled) */
+            cursor: pointer;
+        }
+        .subscribe-btn.enabled:hover {
             background-color: #FACC15; /* Yellow hover color */
             color: black; /* Text color changes to black for contrast */
         }
@@ -36,6 +41,19 @@
         }
         .highlight-yellow {
             color: #FACC15; /* Yellow color */
+        }
+        .payment-btn {
+            background-color: #4F46E5;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .payment-btn:hover {
+            background-color: #FACC15; /* Yellow hover color */
+            color: black; /* Text color changes to black for contrast */
         }
     </style>
 </head>
@@ -111,7 +129,12 @@
             <h2 class="text-3xl font-extrabold section-title">
                 Start <span class="highlight-yellow">Receiving Tailored Insights Today!</span>
             </h2>
-            <p class="mt-4 text-lg text-gray-600">Enter your details to subscribe for just <span class="highlight-yellow">$10</span> and receive your first custom report next Monday morning.</p>
+            <p class="mt-4 text-lg text-gray-600">Enter your details to subscribe for just <span class="highlight-yellow">$10</span> and include your email in the payment notes to link your subscription.</p>
+            <div class="mt-6">
+                <a href="https://pay.theaiguide.fyi" target="_blank" class="payment-btn" id="payment-btn" onclick="enableSubscribe()">
+                    Make Payment
+                </a>
+            </div>
             <div class="mt-8">
                 <form class="bg-white rounded-lg shadow-lg p-8 max-w-lg mx-auto" action="mailto:mediamarketmike@gmail.com" method="POST">
                     <div class="space-y-6">
@@ -127,10 +150,7 @@
                             <label class="block text-sm font-medium text-gray-700">What Do You Need Insights On?</label>
                             <input type="text" name="focus_area" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
                         </div>
-                        <div>
-                            <p class="mt-1 text-gray-600">Complete payment <a href="https://pay.theaiguide.fyi" class="text-indigo-600 hover:underline">here</a> to link your subscription request to your first report.</p>
-                        </div>
-                        <button type="submit" class="subscribe-btn w-full">
+                        <button type="submit" id="subscribe-btn" class="subscribe-btn w-full" disabled>
                             Subscribe Now
                         </button>
                     </div>
@@ -145,5 +165,13 @@
             <p class="text-gray-400 text-sm">© 2025 The AI Guide. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        function enableSubscribe() {
+            const subscribeBtn = document.getElementById('subscribe-btn');
+            subscribeBtn.classList.add('enabled');
+            subscribeBtn.disabled = false;
+        }
+    </script>
 </body>
 </html>
