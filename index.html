@@ -30,6 +30,16 @@
             background-color: #FACC15; /* Yellow hover color */
             color: black; /* Text color changes to black for contrast */
         }
+        /* Scrolling Animation */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-scroll {
+            display: flex;
+            animation: scroll 20s linear infinite;
+            width: calc(200%);
+        }
     </style>
 </head>
 <body class="font-sans">
@@ -95,6 +105,25 @@
             <p class="mt-4 text-lg text-gray-600">
                 The AI Guide provides custom AI-powered insights for any topic you care about. Whether you need marketing trends, real estate analytics, cooking recipes, or answers to unique questions, our system uses advanced algorithms to deliver tailored weekly reports. Just tell us what you need, and we'll handle the rest.
             </p>
+        </div>
+    </section>
+
+    <!-- Trusted By Section -->
+    <section class="py-10 bg-gray-100" id="trusted-by">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-center text-2xl font-bold text-gray-900">Trusted by:</h3>
+            <div class="mt-6 flex overflow-hidden relative">
+                <!-- Scrolling Logos -->
+                <div class="animate-scroll flex items-center space-x-8">
+                    <img src="https://via.placeholder.com/120x50?text=Google" alt="Google" class="h-10">
+                    <img src="https://via.placeholder.com/120x50?text=Amazon" alt="Amazon" class="h-10">
+                    <img src="https://via.placeholder.com/120x50?text=Meta" alt="Meta" class="h-10">
+                    <img src="https://via.placeholder.com/120x50?text=Microsoft" alt="Microsoft" class="h-10">
+                    <img src="https://via.placeholder.com/120x50?text=Netflix" alt="Netflix" class="h-10">
+                    <img src="https://via.placeholder.com/120x50?text=Tesla" alt="Tesla" class="h-10">
+                    <img src="https://via.placeholder.com/120x50?text=Apple" alt="Apple" class="h-10">
+                </div>
+            </div>
         </div>
     </section>
 
