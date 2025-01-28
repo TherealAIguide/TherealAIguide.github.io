@@ -30,15 +30,12 @@
             background-color: #FACC15; /* Yellow hover color */
             color: black; /* Text color changes to black for contrast */
         }
-        /* Scrolling Animation */
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+        .section-title {
+            color: #4F46E5; /* Purple color */
+            font-weight: bold;
         }
-        .animate-scroll {
-            display: flex;
-            animation: scroll 20s linear infinite;
-            width: calc(200%);
+        .highlight-yellow {
+            color: #FACC15; /* Yellow color */
         }
     </style>
 </head>
@@ -108,34 +105,15 @@
         </div>
     </section>
 
-    <!-- Trusted By Section -->
-    <section class="py-10 bg-gray-100" id="trusted-by">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 class="text-center text-2xl font-bold text-gray-900">Trusted by:</h3>
-            <div class="mt-6 flex overflow-hidden relative">
-                <!-- Scrolling Logos -->
-                <div class="animate-scroll flex items-center space-x-8">
-                    <img src="https://via.placeholder.com/120x50?text=Google" alt="Google" class="h-10">
-                    <img src="https://via.placeholder.com/120x50?text=Amazon" alt="Amazon" class="h-10">
-                    <img src="https://via.placeholder.com/120x50?text=Meta" alt="Meta" class="h-10">
-                    <img src="https://via.placeholder.com/120x50?text=Microsoft" alt="Microsoft" class="h-10">
-                    <img src="https://via.placeholder.com/120x50?text=Netflix" alt="Netflix" class="h-10">
-                    <img src="https://via.placeholder.com/120x50?text=Tesla" alt="Tesla" class="h-10">
-                    <img src="https://via.placeholder.com/120x50?text=Apple" alt="Apple" class="h-10">
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Subscription Section -->
-    <section class="py-20 bg-white" id="subscription">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-3xl font-extrabold text-gray-900">Start Receiving Tailored Insights Today!</h2>
-                <p class="mt-4 text-lg text-gray-600">Enter your details to subscribe for just $10 and receive your first custom report next Monday morning.</p>
-            </div>
-            <div class="mt-12 bg-white rounded-lg shadow-lg overflow-hidden">
-                <form class="p-8" action="mailto:mediamarketmike@gmail.com" method="POST">
+    <section class="py-20 bg-gray-50" id="subscription">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-extrabold section-title">
+                Start <span class="highlight-yellow">Receiving Tailored Insights Today!</span>
+            </h2>
+            <p class="mt-4 text-lg text-gray-600">Enter your details to subscribe for just <span class="highlight-yellow">$10</span> and receive your first custom report next Monday morning.</p>
+            <div class="mt-8">
+                <form class="bg-white rounded-lg shadow-lg p-8 max-w-lg mx-auto" action="mailto:mediamarketmike@gmail.com" method="POST">
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Name</label>
@@ -152,7 +130,7 @@
                         <div>
                             <p class="mt-1 text-gray-600">Complete payment <a href="https://pay.theaiguide.fyi" class="text-indigo-600 hover:underline">here</a> to link your subscription request to your first report.</p>
                         </div>
-                        <button type="submit" class="subscribe-btn">
+                        <button type="submit" class="subscribe-btn w-full">
                             Subscribe Now
                         </button>
                     </div>
@@ -167,13 +145,5 @@
             <p class="text-gray-400 text-sm">© 2025 The AI Guide. All rights reserved.</p>
         </div>
     </footer>
-
-    <script>
-        // Mobile Menu Toggle
-        document.getElementById('menu-btn').addEventListener('click', () => {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
-    </script>
 </body>
 </html>
