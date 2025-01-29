@@ -3,38 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, initial-scale=1.1">
-    <title>The AI Guide - Unlock AI-Powered Insights</title>
+    <title>The AI Guide - Subscribe with Stripe</title>
+    <script src="https://js.stripe.com/v3/"></script> <!-- Load Stripe -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
         .hero-gradient {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            transition: all 0.3s ease;
-        }
-        .highlight {
-            color: #FACC15; /* Yellow color */
-            font-weight: bold;
-        }
         .subscribe-btn {
-            background-color: #4F46E5;
+            background-color: #B8B8B8;
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: bold;
             text-align: center;
-            transition: background-color 0.3s;
-        }
-        .subscribe-btn:hover {
-            background-color: #FACC15; /* Yellow hover color */
-            color: black; /* Text color changes to black for contrast */
-        }
-        .subscribe-btn.disabled {
-            background-color: #B8B8B8; /* Gray (disabled) */
             cursor: not-allowed;
+            transition: background-color 0.3s;
         }
-        .payment-btn {
+        .subscribe-btn.enabled {
+            background-color: #4F46E5;
+            cursor: pointer;
+        }
+        .subscribe-btn.enabled:hover {
+            background-color: #FACC15;
+            color: black;
+        }
+        .stripe-btn {
             background-color: #4F46E5;
             color: white;
             padding: 10px 20px;
@@ -43,16 +37,9 @@
             text-align: center;
             transition: background-color 0.3s;
         }
-        .payment-btn:hover {
-            background-color: #FACC15; /* Yellow hover color */
-            color: black; /* Text color changes to black for contrast */
-        }
-        .section-title {
-            color: #4F46E5; /* Purple color */
-            font-weight: bold;
-        }
-        .highlight-yellow {
-            color: #FACC15; /* Yellow color */
+        .stripe-btn:hover {
+            background-color: #FACC15;
+            color: black;
         }
     </style>
 </head>
@@ -69,92 +56,67 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-gradient pt-32 pb-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white">
-                Unlock Insights Tailored to Your Needs
-            </h1>
-            <p class="mt-3 text-base md:text-lg lg:text-xl text-indigo-100">
-                Join <span class="highlight">The AI Guide</span> for weekly curated reports on absolutely anything you need—from marketing trends and real estate analytics to personal interests like cooking or custom projects. Start your week with clarity and actionable insights every Monday morning.
-            </p>
+    <section class="hero-gradient pt-32 pb-20 text-center">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-4xl font-extrabold text-white">Unlock Insights Tailored to Your Needs</h1>
+            <p class="mt-3 text-lg text-indigo-100">Subscribe to receive AI-curated reports on **any topic** every Monday!</p>
             <div class="mt-6">
-                <a href="#subscription" class="subscribe-btn">
-                    Subscribe Now
-                </a>
+                <a href="#subscription" class="subscribe-btn enabled">Subscribe Now</a>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="py-20 bg-gray-50" id="features">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4">
             <div class="text-center">
                 <h2 class="text-3xl font-extrabold text-gray-900">Key Features</h2>
                 <p class="mt-4 text-xl text-gray-600">Everything you need to stay ahead with AI-powered insights.</p>
-            </div>
-            <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="feature-card bg-white rounded-lg shadow-lg p-6">
-                    <div class="text-indigo-600 text-4xl mb-4">🤖</div>
-                    <h3 class="text-xl font-semibold text-gray-900">AI-Curated Insights</h3>
-                    <p class="text-gray-600 mt-2">Advanced AI algorithms analyze and filter the most relevant information for your needs.</p>
-                </div>
-                <div class="feature-card bg-white rounded-lg shadow-lg p-6">
-                    <div class="text-indigo-600 text-4xl mb-4">🎯</div>
-                    <h3 class="text-xl font-semibold text-gray-900">Personalized Focus</h3>
-                    <p class="text-gray-600 mt-2">Content tailored to your industry and interests, ensuring relevance and value.</p>
-                </div>
-                <div class="feature-card bg-white rounded-lg shadow-lg p-6">
-                    <div class="text-indigo-600 text-4xl mb-4">📬</div>
-                    <h3 class="text-xl font-semibold text-gray-900">Weekly Delivery</h3>
-                    <p class="text-gray-600 mt-2">Regular updates delivered directly to your inbox, keeping you informed.</p>
-                </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
     <section class="py-20 bg-white" id="about">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-3xl font-extrabold text-gray-900">About The AI Guide</h2>
-            <p class="mt-4 text-lg text-gray-600">
-                The AI Guide provides custom AI-powered insights for any topic you care about. Whether you need marketing trends, real estate analytics, cooking recipes, or answers to unique questions, our system uses advanced algorithms to deliver tailored weekly reports. Just tell us what you need, and we'll handle the rest.
-            </p>
+            <p class="mt-4 text-lg text-gray-600">The AI Guide provides custom AI-powered insights for any topic you care about. Whether you need marketing trends, real estate analytics, cooking recipes, or answers to unique questions, our system uses advanced algorithms to deliver tailored weekly reports. Just tell us what you need, and we'll handle the rest.</p>
         </div>
     </section>
 
     <!-- Subscription Section -->
-    <section class="py-20 bg-gray-50" id="subscription">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-extrabold section-title">
-                Start <span class="highlight-yellow">Receiving Tailored Insights Today!</span>
-            </h2>
-            <p class="mt-4 text-lg text-gray-600">Enter your details to subscribe for just <span class="highlight-yellow">$10</span> and include your email in the payment notes to link your subscription.</p>
-            <div class="mt-6">
-                <a href="https://pay.theaiguide.fyi" target="_blank" class="payment-btn" id="payment-btn" onclick="enableSubscribe()">
-                    Make Payment
-                </a>
-            </div>
-            <div class="mt-8">
-                <form class="bg-white rounded-lg shadow-lg p-8 max-w-lg mx-auto" action="mailto:mediamarketmike@gmail.com" method="POST">
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Name</label>
-                            <input type="text" name="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">What Do You Need Insights On?</label>
-                            <input type="text" name="focus_area" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
-                        </div>
-                        <button type="submit" id="subscribe-btn" class="subscribe-btn disabled w-full" disabled>
-                            Subscribe Now
-                        </button>
+    <section class="py-20 bg-gray-50 text-center" id="subscription">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-extrabold text-indigo-600">Start Receiving Tailored Insights!</h2>
+            <p class="mt-4 text-lg text-gray-600">Subscribe for just <span class="highlight-yellow">$10/month</span>.</p>
+
+            <!-- Subscription Form -->
+            <form id="subscription-form" class="bg-white rounded-lg shadow-lg p-8 max-w-lg mx-auto">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="name" name="name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
                     </div>
-                </form>
-            </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" name="email" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">What Do You Need Insights On?</label>
+                        <input type="text" id="focus-area" name="focus_area" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
+                    </div>
+                </div>
+
+                <!-- Stripe Payment Button -->
+                <div class="mt-6">
+                    <button type="button" id="stripe-payment-btn" class="stripe-btn">Proceed to Payment</button>
+                </div>
+
+                <!-- Subscribe Now Button (Disabled Until Payment) -->
+                <div class="mt-4">
+                    <button type="submit" id="subscribe-btn" class="subscribe-btn disabled w-full" disabled>Subscribe Now</button>
+                </div>
+            </form>
         </div>
     </section>
 
@@ -166,10 +128,32 @@
     </footer>
 
     <script>
-        function enableSubscribe() {
-            document.getElementById('subscribe-btn').classList.remove('disabled');
-            document.getElementById('subscribe-btn').disabled = false;
-        }
+        const stripe = Stripe("YOUR_STRIPE_PUBLIC_KEY"); // Replace with your Stripe public key
+        const subscribeBtn = document.getElementById("subscribe-btn");
+        const stripePaymentBtn = document.getElementById("stripe-payment-btn");
+
+        // Stripe Checkout Handler
+        stripePaymentBtn.addEventListener("click", async function() {
+            const response = await fetch("/create-checkout-session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    priceId: "prod_RflnJVnLPQMHda", // Replace with your Product ID
+                })
+            });
+            const session = await response.json();
+            await stripe.redirectToCheckout({ sessionId: session.id });
+
+            // Enable "Subscribe Now" button after payment
+            subscribeBtn.classList.add("enabled");
+            subscribeBtn.disabled = false;
+        });
+
+        // Form Submission Handler
+        document.getElementById("subscription-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            alert("Form submitted! Your insights will arrive every Monday.");
+        });
     </script>
 </body>
 </html>
