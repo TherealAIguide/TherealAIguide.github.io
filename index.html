@@ -80,20 +80,20 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
-            overflow-y: auto;
         }
         
         .modal.active {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             padding: 20px;
+            overflow-y: auto;
         }
         
         .modal-content {
             animation: slideIn 0.3s ease-out;
-            max-height: 90vh;
-            overflow-y: auto;
+            max-height: none;
+            margin: auto;
             -webkit-overflow-scrolling: touch;
         }
         
