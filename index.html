@@ -677,7 +677,11 @@
                     });
                     
                     const topicDisplay = formData.topic === 'custom' ? formData.customTopic : formData.topic;
-                    alert(`Thanks ${formData.name}! Your free report on "${topicDisplay}" will be delivered to ${formData.email} shortly.`);
+                    alert(`Thanks ${formData.name}!
+
+Your free report on "${topicDisplay}" is being generated now.
+
+Check ${formData.email} in the next few minutes!`);
                     
                     closeModal();
                     this.reset();
