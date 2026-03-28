@@ -1,71 +1,817 @@
-function doPost(e) {
-  try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    const data = JSON.parse(e.postData.contents);
-    
-    // Log for debugging
-    Logger.log('Received data: ' + JSON.stringify(data));
-    
-    // Add row to sheet
-    sheet.appendRow([
-      new Date(),
-      data.name,
-      data.email,
-      data.topic,
-      data.customTopic || '',
-      'New'
-    ]);
-    
-    // Send confirmation email
-    try {
-      const topicName = data.topic === 'Custom' ? data.customTopic : data.topic;
-      
-      MailApp.sendEmail({
-        to: data.email,
-        subject: '🎯 Your AI Guide Report is Being Prepared',
-        htmlBody: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #7c3aed;">Thanks for signing up, ${data.name}!</h2>
-            
-            <p>Your free report on <strong>"${topicName}"</strong> is being generated now.</p>
-            
-            <p>You'll receive it at this email address within the next few minutes.</p>
-            
-            <p style="margin-top: 30px;">
-              <strong>What's Next?</strong><br>
-              • Check your inbox in 5-10 minutes<br>
-              • The report will come from The AI Guide<br>
-              • Add us to your contacts so we don't end up in spam
-            </p>
-            
-            <p style="margin-top: 30px; color: #666; font-size: 14px;">
-              Best,<br>
-              The AI Guide Team<br>
-              <em>Powered by Consult Genius</em>
-            </p>
-          </div>
-        `
-      });
-      
-      Logger.log('Email sent successfully to: ' + data.email);
-    } catch (emailError) {
-      Logger.log('Email error: ' + emailError.toString());
-    }
-    
-    return ContentService.createTextOutput(JSON.stringify({
-      success: true,
-      message: 'Lead captured successfully'
-    })).setMimeType(ContentService.MimeType.JSON);
-    
-  } catch (error) {
-    Logger.log('Error: ' + error.toString());
-    return ContentService.createTextOutput(JSON.stringify({
-      success: false,
-      error: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The AI Guide - Stop Researching. Start Knowing.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #5b21b6 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #a78bfa 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+        }
+        
+        .pricing-card {
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: scale(1.02);
+        }
+        
+        .popular-badge {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        }
+        
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .animated-gradient {
+            background: linear-gradient(270deg, #a78bfa, #c084fc, #e879f9);
+            background-size: 200% 200%;
+            animation: gradient-shift 8s ease infinite;
+        }
+        
+        .glow {
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+        }
+        
+        .text-shadow {
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .mobile-menu {
+            display: none;
+        }
+        .mobile-menu.active {
+            display: block;
+        }
 
-function doGet(e) {
-  return ContentService.createTextOutput('AI Guide Lead Capture API is running');
-}
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            overflow-y: auto;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            animation: slideIn 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-xl sm:text-2xl font-black gradient-text">The AI Guide</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#why" class="text-gray-700 hover:text-purple-600 transition font-medium">Why This Exists</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-purple-600 transition font-medium">Pricing</a>
+                    <a href="#how" class="text-gray-700 hover:text-purple-600 transition font-medium">How It Works</a>
+                    <a href="#login" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition font-semibold">Login</a>
+                </div>
+                <button onclick="toggleMenu()" class="md:hidden text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="mobile-menu" class="mobile-menu pb-4">
+                <a href="#why" class="block py-2 text-gray-700">Why This Exists</a>
+                <a href="#pricing" class="block py-2 text-gray-700">Pricing</a>
+                <a href="#how" class="block py-2 text-gray-700">How It Works</a>
+                <a href="#login" class="block py-2 text-purple-600 font-semibold">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Free Report Modal -->
+    <div id="freeReportModal" class="modal">
+        <div class="modal-content bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden">
+            <div class="gradient-bg p-6 text-white">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">Let's Build Your Perfect Report</h3>
+                    <button onclick="closeModal()" class="text-white hover:text-gray-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="mt-2 text-purple-100">Answer a few quick questions so we can create something you'll actually read.</p>
+            </div>
+            
+            <form id="freeReportForm" class="p-6 space-y-5">
+                <!-- Name & Email Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Your Name</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                            placeholder="John Doe"
+                        >
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                            placeholder="john@example.com"
+                        >
+                    </div>
+                </div>
+                
+                <!-- Topic Selection -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">What topic do you want to stay sharp on?</label>
+                    <select 
+                        id="topic" 
+                        required 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                    >
+                        <option value="">Choose one...</option>
+                        <option value="Real Estate">Real Estate</option>
+                        <option value="Marketing">Marketing & Growth</option>
+                        <option value="AI & Technology">AI & Technology</option>
+                        <option value="Finance">Finance & Investing</option>
+                        <option value="Health">Health & Wellness</option>
+                        <option value="Business">Business Strategy</option>
+                        <option value="Cooking">Cooking & Food</option>
+                        <option value="Custom">Something else...</option>
+                    </select>
+                </div>
+                
+                <!-- Custom Topic (shows only if "Custom" selected) -->
+                <div id="customTopicDiv" style="display: none;">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">What's your topic?</label>
+                    <input 
+                        type="text" 
+                        id="customTopic" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                        placeholder="e.g., Sustainable Architecture, Venture Capital, etc."
+                    >
+                </div>
+                
+                <!-- Why - This is the key context question -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Why does this topic matter to you right now?</label>
+                    <textarea 
+                        id="context" 
+                        required 
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition resize-none"
+                        placeholder="e.g., 'I'm a real estate agent trying to stay ahead of market shifts' or 'I want to cook healthier meals for my family but don't have time to research recipes'"
+                    ></textarea>
+                    <p class="text-xs text-gray-500 mt-1">This helps us create a report that actually fits your life.</p>
+                </div>
+                
+                <!-- Goal Selection -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">What are you hoping to get out of this?</label>
+                    <div class="space-y-2">
+                        <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                            <input type="checkbox" name="goal" value="Stay ahead at work" class="mt-1 text-purple-600 focus:ring-purple-500">
+                            <div>
+                                <div class="font-medium text-gray-900">Stay ahead at work</div>
+                                <div class="text-xs text-gray-500">Be the person who knows what's coming</div>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                            <input type="checkbox" name="goal" value="Make better decisions" class="mt-1 text-purple-600 focus:ring-purple-500">
+                            <div>
+                                <div class="font-medium text-gray-900">Make better decisions</div>
+                                <div class="text-xs text-gray-500">Have the data you need when it matters</div>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                            <input type="checkbox" name="goal" value="Save time researching" class="mt-1 text-purple-600 focus:ring-purple-500">
+                            <div>
+                                <div class="font-medium text-gray-900">Save time researching</div>
+                                <div class="text-xs text-gray-500">Stop falling down rabbit holes</div>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                            <input type="checkbox" name="goal" value="Personal growth" class="mt-1 text-purple-600 focus:ring-purple-500">
+                            <div>
+                                <div class="font-medium text-gray-900">Personal growth</div>
+                                <div class="text-xs text-gray-500">Keep learning and expanding my knowledge</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Frequency Preference -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">How often do you want updates?</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                            <input type="radio" name="frequency" value="Weekly" checked class="text-purple-600 focus:ring-purple-500">
+                            <span class="font-medium text-gray-900">Weekly</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                            <input type="radio" name="frequency" value="Bi-weekly" class="text-purple-600 focus:ring-purple-500">
+                            <span class="font-medium text-gray-900">Every 2 weeks</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button 
+                    type="submit" 
+                    class="w-full animated-gradient text-white py-4 rounded-full font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 glow"
+                >
+                    Create My Free Report →
+                </button>
+                
+                <p class="text-xs text-gray-500 text-center">
+                    By submitting, you agree to receive emails from The AI Guide. Unsubscribe anytime.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="pt-24 sm:pt-32 pb-16 sm:pb-24 gradient-bg overflow-hidden relative">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-0 left-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-purple-400 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 right-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-pink-400 rounded-full blur-3xl"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center">
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-6 sm:mb-8 leading-tight text-shadow">
+                    You're Already Doing<br>The Research.
+                </h1>
+                <p class="text-xl sm:text-2xl md:text-3xl text-purple-100 mb-4 sm:mb-6 font-light max-w-4xl mx-auto">
+                    You're just doing it the hard way.
+                </p>
+                <p class="text-lg sm:text-xl md:text-2xl text-purple-200 mb-8 sm:mb-12 max-w-3xl mx-auto font-light px-4">
+                    Scrolling. Bookmarking. Meaning to read it later. You know staying informed matters. The only question is whether you keep wasting hours on it.
+                </p>
+                <div class="flex flex-col gap-3 sm:gap-4 items-center px-4">
+                    <button onclick="openModal()" class="animated-gradient text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-bold text-base sm:text-lg hover:shadow-2xl transition transform hover:scale-105 glow w-full sm:w-auto text-center">
+                        Get Your First Report Free →
+                    </button>
+                    <p class="text-purple-200 text-sm font-light">No credit card required. See what you've been missing.</p>
+                </div>
+                <div class="mt-12 sm:mt-16 flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-12 text-purple-100 text-xs sm:text-sm px-4">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Instant delivery</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Your topic, your choice</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why This Exists Section -->
+    <section class="py-16 sm:py-24 bg-white" id="why">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-6 sm:mb-8 text-center">
+                    Why This Exists
+                </h2>
+                <div class="space-y-4 sm:space-y-6 text-base sm:text-lg text-gray-700 leading-relaxed">
+                    <p class="text-lg sm:text-xl font-bold text-gray-900">
+                        Information Overload Isn't Your Problem. It's Bad Information Architecture.
+                    </p>
+                    <p>
+                        You're not lazy. You're not behind. You're just consuming content the way it was designed to be consumed—endlessly.
+                    </p>
+                    <p>
+                        Every newsletter promises to "keep you informed." Every podcast claims to give you "the insights you need." But none of them are built around YOUR goals.
+                    </p>
+                    <p>
+                        The information you actually need exists. It's just buried under everyone else's agenda.
+                    </p>
+                    <p class="text-lg sm:text-xl font-semibold text-purple-600">
+                        The information you need exists. It's just competing with a thousand things you don't. What if staying informed meant one curated report—delivered on your schedule, ready when you need it?
+                    </p>
+                    <p>
+                        You already know information is power. You've been trying to keep up by reading everything, following everyone, saving articles you'll never actually read.
+                    </p>
+                    <p class="text-lg sm:text-xl font-bold text-gray-900">
+                        The only question is whether you let the old pattern win again.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What You Get Section -->
+    <section class="py-16 sm:py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                    Stop Apologizing for Investing in Yourself
+                </h2>
+                <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+                    Every week, AI researches your topics, filters the noise, and delivers what actually matters.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+                <div class="card-hover bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-purple-100">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">AI-Curated Research</h3>
+                    <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+                        No more doom-scrolling. AI scans hundreds of sources weekly and extracts what actually moves your understanding forward.
+                    </p>
+                </div>
+
+                <div class="card-hover bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-purple-100">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Your Topics Only</h3>
+                    <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+                        Real estate trends. Marketing psychology. Emerging tech. Whatever you care about. Zero fluff. Zero algorithmic manipulation.
+                    </p>
+                </div>
+
+                <div class="card-hover bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-purple-100">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Your Schedule</h3>
+                    <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+                        Default: Sunday mornings, ready for your week. Pro users can choose their delivery day. You're done while everyone else is still catching up.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="py-16 sm:py-24 bg-white" id="pricing">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                    You Already Know This Is Worth It
+                </h2>
+                <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
+                    The only question is whether you let inertia win again.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+                <!-- Free Plan -->
+                <div class="pricing-card bg-white rounded-3xl shadow-xl p-6 sm:p-8 border-2 border-gray-200">
+                    <div class="text-center mb-6 sm:mb-8">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Free Trial</h3>
+                        <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">See what you're missing</p>
+                        <div class="flex items-baseline justify-center gap-2">
+                            <span class="text-4xl sm:text-5xl font-black text-gray-900">Free</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-gray-700"><strong>1 instant report</strong> on any topic</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-gray-700">Delivered instantly</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-gray-700">No credit card required</span>
+                        </li>
+                    </ul>
+                    
+                    <button onclick="openModal()" class="w-full bg-gray-900 text-white py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-800 transition">
+                        Get Free Report
+                    </button>
+                </div>
+
+                <!-- Basic Plan -->
+                <div class="pricing-card bg-white rounded-3xl shadow-xl p-6 sm:p-8 border-2 border-gray-200">
+                    <div class="text-center mb-6 sm:mb-8">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Basic</h3>
+                        <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">For focused learners</p>
+                        <div class="flex items-baseline justify-center gap-2">
+                            <span class="text-4xl sm:text-5xl font-black text-gray-900">$2</span>
+                            <span class="text-gray-600">/month</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-gray-700"><strong>1 topic</strong> of your choice</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-gray-700">Weekly email report</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-gray-700">Key insights & trends</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-gray-700">Cancel anytime</span>
+                        </li>
+                    </ul>
+                    
+                    <button onclick="selectPlan('basic')" class="w-full bg-gray-900 text-white py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-800 transition">
+                        Start Basic
+                    </button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl shadow-2xl p-6 sm:p-8 border-2 border-purple-500 relative md:scale-105">
+                    <div class="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="popular-badge text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold shadow-lg">
+                            MOST POPULAR
+                        </span>
+                    </div>
+                    
+                    <div class="text-center mb-6 sm:mb-8">
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Pro</h3>
+                        <p class="text-sm sm:text-base text-purple-100 mb-4 sm:mb-6">For serious learners</p>
+                        <div class="flex items-baseline justify-center gap-2">
+                            <span class="text-4xl sm:text-5xl font-black text-white">$20</span>
+                            <span class="text-purple-100">/month</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-white"><strong>Up to 5 topics</strong> simultaneously</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-white"><strong>Choose your delivery day</strong> (Sun/Mon/Wed/Fri)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-white"><strong>3 on-demand reports/month</strong> (instant delivery)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-white">Dashboard with report archive</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-white"><strong>Chat with Gia</strong> (AI research assistant)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm sm:text-base text-white">Deep research with sources</span>
+                        </li>
+                    </ul>
+                    
+                    <button onclick="selectPlan('pro')" class="w-full bg-white text-purple-600 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:shadow-2xl transition transform hover:scale-105">
+                        Start Pro
+                    </button>
+                </div>
+            </div>
+
+            <p class="text-center text-gray-600 mt-8 sm:mt-12 text-xs sm:text-sm px-4">
+                All plans include curated insights and trend analysis. Cancel anytime with one click.
+            </p>
+        </div>
+    </section>
+
+    <!-- Meet Gia Section -->
+    <section class="py-16 sm:py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-block p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mb-6">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                    Meet Gia
+                </h2>
+                <p class="text-lg sm:text-xl text-gray-600 mb-6">
+                    Your AI research assistant. Available 24/7 for Pro subscribers.
+                </p>
+                <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
+                    Need insights on demand? Gia can research any topic instantly, answer questions about your reports, and help you dive deeper into trends. Think of her as your personal research team—without the overhead.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-16 sm:py-24 bg-white" id="how">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                    It's This Simple
+                </h2>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-8 sm:space-y-12">
+                <div class="flex gap-4 sm:gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                        1
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Tell Us What You Care About</h3>
+                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Pick your topics. Real estate, marketing, AI, cooking, finance—whatever keeps you up at night.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 sm:gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                        2
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">AI Does the Heavy Lifting</h3>
+                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Every week, AI scans hundreds of sources, filters the noise, and extracts what actually matters.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 sm:gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                        3
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Get Your Report on Your Schedule</h3>
+                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Default: Sunday mornings. Read it in 10 minutes. You're ahead of 99% of people in your field.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 sm:mt-16 px-4">
+                <button onclick="openModal()" class="inline-block animated-gradient text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-bold text-base sm:text-lg hover:shadow-2xl transition transform hover:scale-105 glow">
+                    Stop Wasting Time →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-8 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+                <div class="col-span-2 md:col-span-1">
+                    <h3 class="text-white font-bold text-lg sm:text-xl mb-3 sm:mb-4 gradient-text">The AI Guide</h3>
+                    <p class="text-xs sm:text-sm text-gray-400">Stop researching. Start knowing.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
+                    <ul class="space-y-2 text-xs sm:text-sm">
+                        <li><a href="#pricing" class="hover:text-purple-400 transition">Pricing</a></li>
+                        <li><a href="#how" class="hover:text-purple-400 transition">How It Works</a></li>
+                        <li><a href="#login" class="hover:text-purple-400 transition">Login</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Company</h4>
+                    <ul class="space-y-2 text-xs sm:text-sm">
+                        <li><a href="#" class="hover:text-purple-400 transition">About</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Legal</h4>
+                    <ul class="space-y-2 text-xs sm:text-sm">
+                        <li><a href="#" class="hover:text-purple-400 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-xs sm:text-sm text-gray-500">
+                <p>© 2025 The AI Guide. Powered by <a href="#" class="text-purple-400 hover:text-purple-300 transition">Consult Genius</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHRUZzQn8nwEtUXfvwq0X6FvAWik7p47KMrERPhTUSnb9tCGM6aKEqSH3kC-Y5ICZW/exec';
+        
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('active');
+        }
+        
+        function openModal() {
+            const modal = document.getElementById('freeReportModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('freeReportModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function showSuccessModal(name, topic, email) {
+            closeModal();
+            
+            const successHTML = `
+                <div id="successModal" class="modal active">
+                    <div class="modal-content bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+                        <div class="gradient-bg p-8 text-white text-center">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2">Thanks ${name}!</h3>
+                            <p class="text-purple-100">Your personalized report on "${topic}" is being created now.</p>
+                        </div>
+                        
+                        <div class="p-8 text-center">
+                            <p class="text-gray-700 mb-6">
+                                Check <strong>${email}</strong> in the next few minutes!
+                            </p>
+                            <button onclick="closeSuccessModal()" class="animated-gradient text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition">
+                                Got it!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', successHTML);
+        }
+        
+        function closeSuccessModal() {
+            const successModal = document.getElementById('successModal');
+            if (successModal) {
+                successModal.remove();
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('freeReportModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+            
+            document.getElementById('topic').addEventListener('change', function() {
+                const customDiv = document.getElementById('customTopicDiv');
+                if (this.value === 'Custom') {
+                    customDiv.style.display = 'block';
+                    document.getElementById('customTopic').required = true;
+                } else {
+                    customDiv.style.display = 'none';
+                    document.getElementById('customTopic').required = false;
+                }
+            });
+            
+            document.getElementById('freeReportForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.textContent = 'Creating your report...';
+                submitButton.disabled = true;
+                
+                const goals = Array.from(document.querySelectorAll('input[name="goal"]:checked'))
+                    .map(cb => cb.value);
+                
+                const frequency = document.querySelector('input[name="frequency"]:checked').value;
+                
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    topic: document.getElementById('topic').value,
+                    customTopic: document.getElementById('customTopic').value,
+                    context: document.getElementById('context').value,
+                    goals: goals.join(', '),
+                    frequency: frequency
+                };
+                
+                try {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const topicDisplay = formData.topic === 'Custom' ? formData.customTopic : formData.topic;
+                    showSuccessModal(formData.name, topicDisplay, formData.email);
+                    
+                    this.reset();
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Something went wrong. Please try again or email us directly.');
+                } finally {
+                    submitButton.textContent = originalText;
+                    submitButton.disabled = false;
+                }
+            });
+        });
+        
+        function selectPlan(plan) {
+            console.log('Selected plan:', plan);
+            alert('Coming soon! Plan selected: ' + plan);
+        }
+    </script>
+</body>
+</html>
