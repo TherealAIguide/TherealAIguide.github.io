@@ -518,3 +518,184 @@
                 </p>
                 <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
                     Need insights on demand? Gia can research any topic instantly, answer questions about your reports, and help you dive deeper into trends. Think of her as your personal research team—without the overhead.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-16 sm:py-24 bg-white" id="how">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                    It's This Simple
+                </h2>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-8 sm:space-y-12">
+                <div class="flex gap-4 sm:gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                        1
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Tell Us What You Care About</h3>
+                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Pick your topics. Real estate, marketing, AI, cooking, finance—whatever keeps you up at night.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 sm:gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                        2
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">AI Does the Heavy Lifting</h3>
+                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Every week, AI scans hundreds of sources, filters the noise, and extracts what actually matters.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 sm:gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                        3
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Get Your Report on Your Schedule</h3>
+                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Default: Sunday mornings. Read it in 10 minutes. You're ahead of 99% of people in your field.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 sm:mt-16 px-4">
+                <button onclick="openModal()" class="inline-block animated-gradient text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-bold text-base sm:text-lg hover:shadow-2xl transition transform hover:scale-105 glow">
+                    Stop Wasting Time →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-8 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+                <div class="col-span-2 md:col-span-1">
+                    <h3 class="text-white font-bold text-lg sm:text-xl mb-3 sm:mb-4 gradient-text">The AI Guide</h3>
+                    <p class="text-xs sm:text-sm text-gray-400">Stop researching. Start knowing.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
+                    <ul class="space-y-2 text-xs sm:text-sm">
+                        <li><a href="#pricing" class="hover:text-purple-400 transition">Pricing</a></li>
+                        <li><a href="#how" class="hover:text-purple-400 transition">How It Works</a></li>
+                        <li><a href="#login" class="hover:text-purple-400 transition">Login</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Company</h4>
+                    <ul class="space-y-2 text-xs sm:text-sm">
+                        <li><a href="#" class="hover:text-purple-400 transition">About</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Legal</h4>
+                    <ul class="space-y-2 text-xs sm:text-sm">
+                        <li><a href="#" class="hover:text-purple-400 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-xs sm:text-sm text-gray-500">
+                <p>© 2025 The AI Guide. Powered by <a href="#" class="text-purple-400 hover:text-purple-300 transition">Consult Genius</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHRUZzQn8nwEtUXfvwq0X6FvAWik7p47KMrERPhTUSnb9tCGM6aKEqSH3kC-Y5ICZW/exec';
+        
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('active');
+        }
+        
+        function openModal() {
+            const modal = document.getElementById('freeReportModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('freeReportModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close modal when clicking outside
+            document.getElementById('freeReportModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+            
+            // Show/hide custom topic field
+            document.getElementById('topic').addEventListener('change', function() {
+                const customDiv = document.getElementById('customTopicDiv');
+                if (this.value === 'custom') {
+                    customDiv.style.display = 'block';
+                    document.getElementById('customTopic').required = true;
+                } else {
+                    customDiv.style.display = 'none';
+                    document.getElementById('customTopic').required = false;
+                }
+            });
+            
+            // Handle form submission
+            document.getElementById('freeReportForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.textContent = 'Sending...';
+                submitButton.disabled = true;
+                
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    topic: document.getElementById('topic').value,
+                    customTopic: document.getElementById('customTopic').value
+                };
+                
+                try {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const topicDisplay = formData.topic === 'custom' ? formData.customTopic : formData.topic;
+                    alert(`Thanks ${formData.name}! Your free report on "${topicDisplay}" will be delivered to ${formData.email} shortly.`);
+                    
+                    closeModal();
+                    this.reset();
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Something went wrong. Please try again or email us directly.');
+                } finally {
+                    submitButton.textContent = originalText;
+                    submitButton.disabled = false;
+                }
+            });
+        });
+        
+        function selectPlan(plan) {
+            console.log('Selected plan:', plan);
+            alert('Coming soon! Plan selected: ' + plan);
+        }
+    </script>
+</body>
+</html>
