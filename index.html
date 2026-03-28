@@ -69,6 +69,39 @@
         .mobile-menu.active {
             display: block;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -100,6 +133,87 @@
         </div>
     </nav>
 
+    <!-- Free Report Modal -->
+    <div id="freeReportModal" class="modal">
+        <div class="modal-content bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+            <div class="gradient-bg p-6 text-white">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">Get Your First Report Free</h3>
+                    <button onclick="closeModal()" class="text-white hover:text-gray-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="mt-2 text-purple-100">Delivered instantly. No credit card required.</p>
+            </div>
+            
+            <form id="freeReportForm" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Your Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        required 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                        placeholder="John Doe"
+                    >
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        required 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                        placeholder="john@example.com"
+                    >
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">What topic interests you?</label>
+                    <select 
+                        id="topic" 
+                        required 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                    >
+                        <option value="">Choose a topic...</option>
+                        <option value="real-estate">Real Estate Trends</option>
+                        <option value="marketing">Marketing & Growth</option>
+                        <option value="ai-tech">AI & Technology</option>
+                        <option value="finance">Finance & Investing</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="business">Business Strategy</option>
+                        <option value="cooking">Cooking & Food</option>
+                        <option value="custom">Custom Topic</option>
+                    </select>
+                </div>
+                
+                <div id="customTopicDiv" style="display: none;">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Specify your topic</label>
+                    <input 
+                        type="text" 
+                        id="customTopic" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                        placeholder="e.g., Sustainable Architecture"
+                    >
+                </div>
+                
+                <button 
+                    type="submit" 
+                    class="w-full animated-gradient text-white py-4 rounded-full font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 glow"
+                >
+                    Get My Free Report →
+                </button>
+                
+                <p class="text-xs text-gray-500 text-center">
+                    By submitting, you agree to receive emails from The AI Guide. Unsubscribe anytime.
+                </p>
+            </form>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="pt-24 sm:pt-32 pb-16 sm:pb-24 gradient-bg overflow-hidden relative">
         <div class="absolute inset-0 opacity-20">
@@ -118,9 +232,9 @@
                     Scrolling. Bookmarking. Meaning to read it later. You know staying informed matters. The only question is whether you keep wasting hours on it.
                 </p>
                 <div class="flex flex-col gap-3 sm:gap-4 items-center px-4">
-                    <a href="#pricing" class="animated-gradient text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-bold text-base sm:text-lg hover:shadow-2xl transition transform hover:scale-105 glow w-full sm:w-auto text-center">
+                    <button onclick="openModal()" class="animated-gradient text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-bold text-base sm:text-lg hover:shadow-2xl transition transform hover:scale-105 glow w-full sm:w-auto text-center">
                         Get Your First Report Free →
-                    </a>
+                    </button>
                     <p class="text-purple-200 text-sm font-light">No credit card required. See what you've been missing.</p>
                 </div>
                 <div class="mt-12 sm:mt-16 flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-12 text-purple-100 text-xs sm:text-sm px-4">
@@ -271,7 +385,7 @@
                         </li>
                     </ul>
                     
-                    <button onclick="selectPlan('free')" class="w-full bg-gray-900 text-white py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-800 transition">
+                    <button onclick="openModal()" class="w-full bg-gray-900 text-white py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-800 transition">
                         Get Free Report
                     </button>
                 </div>
@@ -404,108 +518,3 @@
                 </p>
                 <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
                     Need insights on demand? Gia can research any topic instantly, answer questions about your reports, and help you dive deeper into trends. Think of her as your personal research team—without the overhead.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="py-16 sm:py-24 bg-white" id="how">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 sm:mb-16">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4">
-                    It's This Simple
-                </h2>
-            </div>
-
-            <div class="max-w-4xl mx-auto space-y-8 sm:space-y-12">
-                <div class="flex gap-4 sm:gap-6 items-start">
-                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
-                        1
-                    </div>
-                    <div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Tell Us What You Care About</h3>
-                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Pick your topics. Real estate, marketing, AI, cooking, finance—whatever keeps you up at night.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-4 sm:gap-6 items-start">
-                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
-                        2
-                    </div>
-                    <div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">AI Does the Heavy Lifting</h3>
-                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Every week, AI scans hundreds of sources, filters the noise, and extracts what actually matters.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-4 sm:gap-6 items-start">
-                    <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl">
-                        3
-                    </div>
-                    <div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Get Your Report on Your Schedule</h3>
-                        <p class="text-sm sm:text-base text-gray-600 sm:text-lg">Default: Sunday mornings. Read it in 10 minutes. You're ahead of 99% of people in your field.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-12 sm:mt-16 px-4">
-                <a href="#pricing" class="inline-block animated-gradient text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full font-bold text-base sm:text-lg hover:shadow-2xl transition transform hover:scale-105 glow">
-                    Stop Wasting Time →
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 py-8 sm:py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-                <div class="col-span-2 md:col-span-1">
-                    <h3 class="text-white font-bold text-lg sm:text-xl mb-3 sm:mb-4 gradient-text">The AI Guide</h3>
-                    <p class="text-xs sm:text-sm text-gray-400">Stop researching. Start knowing.</p>
-                </div>
-                <div>
-                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
-                    <ul class="space-y-2 text-xs sm:text-sm">
-                        <li><a href="#pricing" class="hover:text-purple-400 transition">Pricing</a></li>
-                        <li><a href="#how" class="hover:text-purple-400 transition">How It Works</a></li>
-                        <li><a href="#login" class="hover:text-purple-400 transition">Login</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Company</h4>
-                    <ul class="space-y-2 text-xs sm:text-sm">
-                        <li><a href="#" class="hover:text-purple-400 transition">About</a></li>
-                        <li><a href="#" class="hover:text-purple-400 transition">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Legal</h4>
-                    <ul class="space-y-2 text-xs sm:text-sm">
-                        <li><a href="#" class="hover:text-purple-400 transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-purple-400 transition">Terms of Service</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-800 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center text-xs sm:text-sm text-gray-500">
-                <p>© 2025 The AI Guide. Powered by <a href="#" class="text-purple-400 hover:text-purple-300 transition">Consult Genius</a>. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('active');
-        }
-        
-        function selectPlan(plan) {
-            console.log('Selected plan:', plan);
-            alert('Coming soon! Plan selected: ' + plan);
-            // Will connect to Stripe Checkout
-        }
-    </script>
-</body>
-</html>
