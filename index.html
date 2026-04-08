@@ -1,4 +1,3 @@
-<document_content name="index.html" content_type="text/html">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -155,6 +154,7 @@
             </div>
         </div>
     </nav>
+
 <!-- Free Report Modal -->
 <div id="freeReportModal" class="modal">
     <div class="modal-content bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden">
@@ -398,6 +398,159 @@
     </div>
 </div>
 
+<!-- Basic Subscription Modal -->
+<div id="basicSubscriptionModal" class="modal">
+    <div class="modal-content bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden">
+        <div class="gradient-bg p-6 text-white">
+            <div class="flex justify-between items-center">
+                <h3 class="text-2xl font-bold">Start with Basic - $2/month</h3>
+                <button onclick="closeBasicSubscription()" class="text-white hover:text-gray-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="mt-2 text-purple-100">Get weekly reports on your topic. Cancel anytime.</p>
+        </div>
+        
+        <form id="basicSubscriptionForm" class="p-6 space-y-5">
+            <!-- Name & Email Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Your Name</label>
+                    <input 
+                        type="text" 
+                        id="basicName" 
+                        required 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                        placeholder="John Doe"
+                    >
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="basicEmail" 
+                        required 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                        placeholder="john@example.com"
+                    >
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">What topic do you want to stay sharp on?</label>
+                <select 
+                    id="basicTopic" 
+                    required 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                >
+                    <option value="">Choose one...</option>
+                    <option value="Real Estate">Real Estate</option>
+                    <option value="Marketing">Marketing & Growth</option>
+                    <option value="AI & Technology">AI & Technology</option>
+                    <option value="Finance">Finance & Investing</option>
+                    <option value="Health">Health & Wellness</option>
+                    <option value="Business">Business Strategy</option>
+                    <option value="Cooking">Cooking & Food</option>
+                    <option value="Custom">Something else...</option>
+                </select>
+            </div>
+            
+            <div id="basicCustomTopicDiv" style="display: none;">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">What's your topic?</label>
+                <input 
+                    type="text" 
+                    id="basicCustomTopic" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                    placeholder="e.g., Sustainable Architecture, Venture Capital, etc."
+                >
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">What's your current role or situation?</label>
+                <input 
+                    type="text" 
+                    id="basicRoleSituation" 
+                    required 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                    placeholder="e.g., 'I'm a real estate agent in Seattle'"
+                >
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Why does this topic matter to you right now?</label>
+                <textarea 
+                    id="basicContext" 
+                    required 
+                    rows="3"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition resize-none"
+                    placeholder="e.g., 'I need to understand market shifts'"
+                ></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">What are you hoping to get out of this?</label>
+                <div class="space-y-2">
+                    <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                        <input type="checkbox" name="basicGoal" value="Stay ahead at work" class="mt-1 text-purple-600 focus:ring-purple-500">
+                        <div>
+                            <div class="font-medium text-gray-900">Stay ahead at work</div>
+                        </div>
+                    </label>
+                    
+                    <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                        <input type="checkbox" name="basicGoal" value="Make better decisions" class="mt-1 text-purple-600 focus:ring-purple-500">
+                        <div>
+                            <div class="font-medium text-gray-900">Make better decisions</div>
+                        </div>
+                    </label>
+                    
+                    <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                        <input type="checkbox" name="basicGoal" value="Save time researching" class="mt-1 text-purple-600 focus:ring-purple-500">
+                        <div>
+                            <div class="font-medium text-gray-900">Save time researching</div>
+                        </div>
+                    </label>
+                    
+                    <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                        <input type="checkbox" name="basicGoal" value="Personal growth" class="mt-1 text-purple-600 focus:ring-purple-500">
+                        <div>
+                            <div class="font-medium text-gray-900">Personal growth</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">How often do you want updates?</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                        <input type="radio" name="basicFrequency" value="Weekly" checked class="text-purple-600 focus:ring-purple-500">
+                        <span class="font-medium text-gray-900">Weekly</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:border-purple-300 cursor-pointer transition">
+                        <input type="radio" name="basicFrequency" value="Bi-weekly" class="text-purple-600 focus:ring-purple-500">
+                        <span class="font-medium text-gray-900">Every 2 weeks</span>
+                    </label>
+                </div>
+            </div>
+            
+            <button 
+                type="submit" 
+                class="w-full animated-gradient text-white py-4 rounded-full font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 glow"
+            >
+                Continue to Payment ($2/month) →
+            </button>
+            
+            <p class="text-xs text-gray-500 text-center">
+                You'll be redirected to Stripe for secure payment. Cancel anytime.
+            </p>
+        </form>
+    </div>
+</div>
+
 <!-- Hero Section -->
 <section class="pt-24 sm:pt-32 pb-16 sm:pb-24 gradient-bg overflow-hidden relative">
     <div class="absolute inset-0 opacity-20">
@@ -637,41 +790,42 @@
                 <ul class="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                     <li class="flex items-start gap-3">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l22a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-</svg>
-<span class="text-sm sm:text-base text-white"><strong>Up to 5 topics</strong> simultaneously</span>
-</li>
-<li class="flex items-start gap-3">
-<svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-</svg>
-<span class="text-sm sm:text-base text-white"><strong>Choose your delivery day</strong> (Sun/Mon/Wed/Fri)</span>
-</li>
-<li class="flex items-start gap-3">
-<svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-</svg>
-<span class="text-sm sm:text-base text-white"><strong>3 on-demand reports/month</strong> (instant delivery)</span>
-</li>
-<li class="flex items-start gap-3">
-<svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-</svg>
-<span class="text-sm sm:text-base text-white">Dashboard with report archive</span>
-</li>
-<li class="flex items-start gap-3">
-<svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-</svg>
-<span class="text-sm sm:text-base text-white"><strong>Chat with Gia</strong> (AI research assistant)</span>
-</li>
-<li class="flex items-start gap-3">
-<svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-</svg>
-<span class="text-sm sm:text-base text-white">Deep research with sources</span>
-</li>
-</ul>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm sm:text-base text-white"><strong>Up to 5 topics</strong> simultaneously</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm sm:text-base text-white"><strong>Choose your delivery day</strong> (Sun/Mon/Wed/Fri)</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm sm:text-base text-white"><strong>3 on-demand reports/month</strong> (instant delivery)</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm sm:text-base text-white">Dashboard with report archive</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm sm:text-base text-white"><strong>Chat with Gia</strong> (AI research assistant)</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm sm:text-base text-white">Deep research with sources</span>
+                    </li>
+                </ul>
+                
                 <button onclick="selectPlan('pro')" class="w-full bg-white text-purple-600 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:shadow-2xl transition transform hover:scale-105">
                     Start Pro
                 </button>
@@ -830,6 +984,11 @@
         document.getElementById('waitlistSuccessModal').classList.remove('active');
         document.body.style.overflow = '';
     }
+
+    function closeBasicSubscription() {
+        document.getElementById('basicSubscriptionModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
     
     function showSuccessModal(name, topic, email) {
         closeModal();
@@ -888,8 +1047,14 @@
                 closeWaitlistSuccess();
             }
         });
+
+        document.getElementById('basicSubscriptionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBasicSubscription();
+            }
+        });
         
-        // Custom topic field toggle
+        // Custom topic field toggle - Free Report
         document.getElementById('topic').addEventListener('change', function() {
             const customDiv = document.getElementById('customTopicDiv');
             if (this.value === 'Custom') {
@@ -898,6 +1063,18 @@
             } else {
                 customDiv.style.display = 'none';
                 document.getElementById('customTopic').required = false;
+            }
+        });
+
+        // Custom topic field toggle - Basic Subscription
+        document.getElementById('basicTopic').addEventListener('change', function() {
+            const customDiv = document.getElementById('basicCustomTopicDiv');
+            if (this.value === 'Custom') {
+                customDiv.style.display = 'block';
+                document.getElementById('basicCustomTopic').required = true;
+            } else {
+                customDiv.style.display = 'none';
+                document.getElementById('basicCustomTopic').required = false;
             }
         });
         
@@ -990,18 +1167,69 @@
                 submitButton.disabled = false;
             }
         });
+
+        // Basic Subscription Form Handler
+        document.getElementById('basicSubscriptionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Processing...';
+            submitButton.disabled = true;
+            
+            const goals = Array.from(document.querySelectorAll('input[name="basicGoal"]:checked'))
+                .map(cb => cb.value);
+            
+            const frequency = document.querySelector('input[name="basicFrequency"]:checked').value;
+            
+            const formData = {
+                type: 'basic_subscription',
+                name: document.getElementById('basicName').value,
+                email: document.getElementById('basicEmail').value,
+                topic: document.getElementById('basicTopic').value,
+                customTopic: document.getElementById('basicCustomTopic').value,
+                roleSituation: document.getElementById('basicRoleSituation').value,
+                context: document.getElementById('basicContext').value,
+                goals: goals.join(', '),
+                frequency: frequency
+            };
+            
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                // TODO: Redirect to Stripe payment
+                alert('Payment integration coming soon! Your info has been saved.');
+                closeBasicSubscription();
+                this.reset();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Something went wrong. Please try again.');
+            } finally {
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
+        });
     });
     
     function selectPlan(plan) {
         if (plan === 'pro') {
             openProWaitlist();
         } else if (plan === 'basic') {
-            console.log('Basic plan selected');
-            alert('Coming soon! Plan selected: Basic ($2/month)');
+            // Close waitlist success modal if open
+            closeWaitlistSuccess();
+            // Open Basic subscription modal
+            document.getElementById('basicSubscriptionModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
     }
 </script>
 </body>
 </html>
-</document_content>
-</document>
