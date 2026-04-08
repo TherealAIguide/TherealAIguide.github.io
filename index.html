@@ -951,7 +951,7 @@
 </footer>
 
 <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHRUZzQn8nwEtUXfvwq0X6FvAWik7p47KMrERPhTUSnb9tCGM6aKEqSH3kC-Y5ICZW/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBoORXEP6KoSyI8hfStBMjZSdjUPEJ_kEh-rnS4ByA2LdX3Da3hBjtgDRuqThIqJ_P/exec';
     
     function toggleMenu() {
         const menu = document.getElementById('mobile-menu');
@@ -1002,16 +1002,29 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">Thanks ${name}!</h3>
-                        <p class="text-purple-100">Your personalized report on "${topic}" is being created now.</p>
+                        <h3 class="text-2xl font-bold mb-2">Your Report is On Its Way!</h3>
+                        <p class="text-purple-100">Check <strong>${email}</strong> in the next few minutes</p>
                     </div>
                     
-                    <div class="p-8 text-center">
-                        <p class="text-gray-700 mb-6">
-                            Check <strong>${email}</strong> in the next few minutes!
-                        </p>
-                        <button onclick="closeSuccessModal()" class="animated-gradient text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition">
-                            Got it!
+                    <div class="p-8">
+                        <div class="text-center mb-6">
+                            <p class="text-lg font-semibold text-gray-900 mb-2">
+                                Want this every week?
+                            </p>
+                            <p class="text-gray-600 mb-1">
+                                Get weekly reports on ${topic} for just <strong>$2/month</strong>
+                            </p>
+                            <p class="text-sm text-gray-500">
+                                Cancel anytime. No commitment.
+                            </p>
+                        </div>
+                        
+                        <button onclick="upgradeToBasic('${name}', '${topic}', '${email}')" class="w-full animated-gradient text-white py-3 rounded-full font-bold hover:shadow-lg transition mb-3">
+                            Yes, Sign Me Up for $2/month →
+                        </button>
+                        
+                        <button onclick="closeSuccessModal()" class="w-full text-gray-500 text-sm hover:text-gray-700 transition">
+                            No thanks, just the free report
                         </button>
                     </div>
                 </div>
@@ -1020,12 +1033,26 @@
         
         document.body.insertAdjacentHTML('beforeend', successHTML);
     }
+
+    function upgradeToBasic(name, topic, email) {
+        closeSuccessModal();
+        
+        // Pre-fill the Basic subscription form
+        document.getElementById('basicName').value = name;
+        document.getElementById('basicEmail').value = email;
+        document.getElementById('basicTopic').value = topic;
+        
+        // Open Basic subscription modal
+        document.getElementById('basicSubscriptionModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
     
     function closeSuccessModal() {
         const successModal = document.getElementById('successModal');
         if (successModal) {
             successModal.remove();
         }
+        document.body.style.overflow = '';
     }
     
     document.addEventListener('DOMContentLoaded', function() {
@@ -1102,6 +1129,8 @@
                 goals: goals.join(', '),
                 frequency: frequency
             };
+            
+            console.log('Form data being sent:', formData);
             
             try {
                 await fetch(GOOGLE_SCRIPT_URL, {
