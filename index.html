@@ -1,21 +1,60 @@
-<artifact identifier="ai-guide-premium-ux-fixed" type="text/html" title="The AI Guide - Premium UX Fixed">
+<artifact identifier="ai-guide-complete-gia-integration" type="text/html" title="The AI Guide - Complete GIA Integration">
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The AI Guide - Your Competitors Read This Every Sunday</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+<!-- Prevent FOUC (Flash of Unstyled Content) -->
+<script>
+    (function() {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 * {
     font-family: 'Inter', sans-serif;
 }
 
+/* ===== DARK MODE SYSTEM ===== */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b7280;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --nav-bg: rgba(255, 255, 255, 0.8);
+    --mode-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #14141f;
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --card-bg: rgba(20, 20, 30, 0.8);
+    --nav-bg: rgba(20, 20, 30, 0.95);
+}
+
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: var(--mode-transition);
+}
+
+/* Purple gradient preserved in both modes */
 .gradient-bg {
     background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #5b21b6 100%);
 }
@@ -27,22 +66,21 @@
     background-clip: text;
 }
 
-/* GLASSMORPHISM */
+/* Glassmorphism adapts to theme */
 .glass-card {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--card-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--border-color);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: var(--mode-transition);
 }
 
-.glass-modal {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+[data-theme="dark"] .glass-card {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* CARD HOVER EFFECTS */
+/* Card hover effects */
 .card-hover {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -52,7 +90,7 @@
     box-shadow: 0 20px 40px rgba(124, 58, 237, 0.2);
 }
 
-/* PRICING CARD */
+/* Pricing cards */
 .pricing-card {
     transition: all 0.3s ease;
 }
@@ -61,7 +99,7 @@
     transform: scale(1.02);
 }
 
-/* ANIMATED GRADIENT */
+/* Animated gradient */
 @keyframes gradient-shift {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -73,7 +111,7 @@
     animation: gradient-shift 8s ease infinite;
 }
 
-/* CTA MICRO-INTERACTIONS */
+/* CTA micro-interactions */
 .cta-button {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -87,7 +125,6 @@
     transform: scale(0.98);
 }
 
-/* GLOW EFFECT */
 .glow {
     box-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
 }
@@ -96,7 +133,29 @@
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* MOBILE MENU */
+/* Theme-aware text colors */
+.text-gray-900 {
+    color: var(--text-primary) !important;
+}
+
+.text-gray-600, .text-gray-700 {
+    color: var(--text-secondary) !important;
+}
+
+/* Theme-aware backgrounds */
+.bg-white {
+    background: var(--card-bg) !important;
+}
+
+.bg-gray-50 {
+    background: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .bg-white {
+    border: 1px solid var(--border-color);
+}
+
+/* Mobile menu */
 .mobile-menu {
     display: none;
 }
@@ -104,7 +163,7 @@
     display: block;
 }
 
-/* MODAL SYSTEM */
+/* Modal system */
 .modal {
     display: none;
     position: fixed;
@@ -143,7 +202,7 @@
     }
 }
 
-/* MULTI-STEP FORM */
+/* Multi-step form */
 .form-step {
     display: none;
 }
@@ -179,7 +238,7 @@
     }
 }
 
-/* PROGRESS BAR */
+/* Progress bar */
 .progress-bar {
     height: 4px;
     background: rgba(167, 139, 250, 0.2);
@@ -194,7 +253,7 @@
     box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
 }
 
-/* FORM INPUT ENHANCEMENTS */
+/* Form input enhancements */
 .form-input {
     transition: all 0.3s ease;
     position: relative;
@@ -208,78 +267,12 @@
     box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
 }
 
-/* VALIDATION CHECKMARK */
-.input-valid {
-    position: relative;
+[data-theme="dark"] .form-input:focus {
+    background: linear-gradient(var(--bg-secondary), var(--bg-secondary)) padding-box,
+                linear-gradient(135deg, #a78bfa, #c084fc) border-box;
 }
 
-.input-valid::after {
-    content: "✓";
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #10b981;
-    font-weight: bold;
-    animation: checkmarkPop 0.3s ease-out;
-}
-
-@keyframes checkmarkPop {
-    0% { transform: translateY(-50%) scale(0); }
-    50% { transform: translateY(-50%) scale(1.2); }
-    100% { transform: translateY(-50%) scale(1); }
-}
-
-/* AI THINKING INDICATOR */
-.ai-thinking {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-}
-
-.ai-orb {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #a78bfa, #c084fc, #e879f9);
-    background-size: 200% 200%;
-    border-radius: 50%;
-    animation: orbPulse 2s ease-in-out infinite, gradient-shift 3s ease infinite;
-    box-shadow: 0 0 40px rgba(167, 139, 250, 0.6);
-}
-
-@keyframes orbPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-
-.thinking-dots {
-    display: flex;
-    gap: 8px;
-}
-
-.thinking-dots span {
-    width: 8px;
-    height: 8px;
-    background: #a78bfa;
-    border-radius: 50%;
-    animation: dotBounce 1.4s ease-in-out infinite;
-}
-
-.thinking-dots span:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.thinking-dots span:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-@keyframes dotBounce {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-10px); }
-}
-
-/* SUCCESS MODAL */
+/* Success modal */
 .success-modal-content {
     animation: successPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
@@ -321,7 +314,7 @@
     to { stroke-dashoffset: 0; }
 }
 
-/* URGENCY BADGE */
+/* Urgency badge */
 .urgency-badge {
     background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
     animation: pulse 2s ease-in-out infinite;
@@ -332,13 +325,14 @@
     50% { opacity: 0.8; }
 }
 
-/* TESTIMONIAL CARD */
+/* Testimonial cards */
 .testimonial-card {
-    background: white;
+    background: var(--card-bg);
     border-left: 4px solid #7c3aed;
+    transition: var(--mode-transition);
 }
 
-/* VERIFIED BADGE */
+/* Verified badge */
 .verified-badge {
     display: inline-block;
     width: 18px;
@@ -347,17 +341,17 @@
     color: #7c3aed;
 }
 
-/* LIVE ACTIVITY NOTIFICATION */
+/* Live activity notification */
 .activity-notification {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--card-bg);
     backdrop-filter: blur(10px);
     padding: 12px 20px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(124, 58, 237, 0.2);
+    border: 1px solid var(--border-color);
     z-index: 50;
     transform: translateY(100px);
     opacity: 0;
@@ -383,7 +377,7 @@
     50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
 }
 
-/* POWERED BY AI BADGE */
+/* AI badge */
 .ai-badge {
     display: inline-flex;
     align-items: center;
@@ -405,12 +399,253 @@
     animation: pulseDot 2s ease-in-out infinite;
 }
 
-/* COUNTER ANIMATION */
+/* Counter animation */
 .counter {
     display: inline-block;
 }
 
-/* ACCESSIBILITY */
+/* ===== DARK MODE TOGGLE ===== */
+.theme-toggle {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1001;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(124, 58, 237, 0.3);
+}
+
+.theme-toggle svg {
+    width: 24px;
+    height: 24px;
+    color: var(--text-primary);
+    transition: var(--mode-transition);
+}
+
+[data-theme="dark"] .sun-icon {
+    display: block;
+}
+
+[data-theme="dark"] .moon-icon {
+    display: none;
+}
+
+[data-theme="light"] .sun-icon,
+:root .sun-icon {
+    display: none;
+}
+
+[data-theme="light"] .moon-icon,
+:root .moon-icon {
+    display: block;
+}
+
+/* ===== GIA AMBIENT PRESENCE ===== */
+.gia-ambient {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 100px;
+    height: 100px;
+    z-index: 999;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* Light mode GIA adjustments */
+[data-theme="light"] .gia-ambient,
+:root .gia-ambient {
+    filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.4));
+}
+
+/* Dark mode GIA */
+[data-theme="dark"] .gia-ambient {
+    filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.6));
+}
+
+.gia-ambient:hover {
+    transform: scale(1.1);
+}
+
+.gia-core {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-size: 200% 200%;
+    animation: gradientFlow 8s ease infinite, breathe 4s ease-in-out infinite;
+}
+
+/* Light mode GIA core */
+[data-theme="light"] .gia-core,
+:root .gia-core {
+    background: linear-gradient(135deg, #7c3aed, #a855f7, #c026d3);
+    border: 2px solid rgba(124, 58, 237, 0.2);
+    box-shadow: 
+        inset 0 0 40px rgba(255, 255, 255, 0.5),
+        0 0 40px rgba(124, 58, 237, 0.3),
+        0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode GIA core */
+[data-theme="dark"] .gia-core {
+    background: linear-gradient(135deg, #a78bfa, #c084fc, #e879f9);
+    border: none;
+    box-shadow: 
+        inset 0 0 40px rgba(255, 255, 255, 0.3),
+        0 0 60px rgba(167, 139, 250, 0.4);
+}
+
+/* Morphing liquid effect */
+.gia-core::before {
+    content: '';
+    position: absolute;
+    inset: -10%;
+    border-radius: 50%;
+    background: inherit;
+    filter: blur(30px);
+    opacity: 0.6;
+    animation: morph 6s ease-in-out infinite;
+}
+
+/* Inner glow pulse */
+.gia-core::after {
+    content: '';
+    position: absolute;
+    inset: 20%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8), transparent 70%);
+    animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes gradientFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes morph {
+    0%, 100% { 
+        border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+    }
+    25% { 
+        border-radius: 45% 55% 52% 48% / 48% 52% 55% 45%;
+    }
+    50% { 
+        border-radius: 52% 48% 45% 55% / 55% 45% 48% 52%;
+    }
+    75% { 
+        border-radius: 48% 52% 55% 45% / 45% 55% 52% 48%;
+    }
+}
+
+@keyframes glow-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.2); }
+}
+
+/* Ripple effect on click */
+.gia-ripple {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(167, 139, 250, 0.6);
+    width: 100%;
+    height: 100%;
+    animation: rippleExpand 1s ease-out;
+    pointer-events: none;
+}
+
+@keyframes rippleExpand {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+/* Active state when GIA is "speaking" */
+.gia-ambient.active .gia-core {
+    animation: gradientFlow 2s ease infinite, breathe 1s ease-in-out infinite;
+}
+
+/* ===== LOGO REVEAL ANIMATION ===== */
+.logo-reveal-wrapper {
+    perspective: 1000px;
+    display: inline-block;
+    position: relative;
+}
+
+.logo-letter {
+    display: inline-block;
+    font-size: inherit;
+    font-weight: 900;
+    background: linear-gradient(135deg, #a78bfa 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform-style: preserve-3d;
+    transition: all 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 1;
+}
+
+/* Trigger reveal animation */
+.logo-reveal-wrapper.revealing .logo-letter[data-keep="true"] {
+    transform: rotateY(720deg);
+}
+
+.logo-reveal-wrapper.revealing .logo-letter[data-keep="false"] {
+    opacity: 0;
+    transform: scale(0) rotateY(360deg);
+}
+
+/* Subtle hover effect on logo */
+.logo-reveal-wrapper:hover .logo-letter {
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .gia-ambient {
+        width: 70px;
+        height: 70px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .theme-toggle {
+        width: 45px;
+        height: 45px;
+        top: 70px;
+    }
+
+    .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -421,36 +656,66 @@
 </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="glass-card shadow-sm fixed w-full z-50 border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex-shrink-0 flex items-center">
-                    <span class="text-xl sm:text-2xl font-black gradient-text">The AI Guide</span>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#testimonials" class="text-gray-700 hover:text-purple-600 transition font-medium">Testimonials</a>
-                    <a href="#pricing" class="text-gray-700 hover:text-purple-600 transition font-medium">Pricing</a>
-                    <a href="/sample-report-real-estate-final.html" target="_blank" class="text-gray-700 hover:text-purple-600 transition font-medium">Sample Report</a>
-                    <a href="#login" class="cta-button bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-semibold">Login</a>
-                </div>
-                <button onclick="toggleMenu()" class="md:hidden text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
+    <!-- Dark Mode Toggle -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+        </svg>
+    </button>
+<!-- GIA Ambient Presence -->
+<div class="gia-ambient" id="ambientGIA">
+    <div class="gia-core"></div>
+</div>
+
+<!-- Navigation -->
+<nav class="glass-card shadow-sm fixed w-full z-50 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex-shrink-0 flex items-center">
+                <span class="text-xl sm:text-2xl font-black">
+                    <span class="logo-reveal-wrapper" id="logoReveal">
+                        <span class="logo-letter" data-keep="false">T</span>
+                        <span class="logo-letter" data-keep="false">h</span>
+                        <span class="logo-letter" data-keep="false">e</span>
+                        <span class="logo-letter" data-keep="false"> </span>
+                        <span class="logo-letter" data-keep="false">A</span>
+                        <span class="logo-letter" data-keep="false">I</span>
+                        <span class="logo-letter" data-keep="false"> </span>
+                        <span class="logo-letter" data-keep="true">G</span>
+                        <span class="logo-letter" data-keep="false">u</span>
+                        <span class="logo-letter" data-keep="true">i</span>
+                        <span class="logo-letter" data-keep="false">d</span>
+                        <span class="logo-letter" data-keep="false">e</span>
+                    </span>
+                </span>
             </div>
-            <div id="mobile-menu" class="mobile-menu pb-4">
-                <a href="#testimonials" class="block py-2 text-gray-700">Testimonials</a>
-                <a href="#pricing" class="block py-2 text-gray-700">Pricing</a>
-                <a href="/sample-report-real-estate-final.html" target="_blank" class="block py-2 text-gray-700">Sample Report</a>
-                <a href="#login" class="block py-2 text-purple-600 font-semibold">Login</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#testimonials" class="text-gray-700 hover:text-purple-600 transition font-medium">Testimonials</a>
+                <a href="#pricing" class="text-gray-700 hover:text-purple-600 transition font-medium">Pricing</a>
+                <a href="/sample-report-real-estate-final.html" target="_blank" class="text-gray-700 hover:text-purple-600 transition font-medium">Sample Report</a>
+                <a href="#login" class="cta-button bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-semibold">Login</a>
             </div>
+            <button onclick="toggleMenu()" class="md:hidden text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
         </div>
-    </nav>
+        <div id="mobile-menu" class="mobile-menu pb-4">
+            <a href="#testimonials" class="block py-2 text-gray-700">Testimonials</a>
+            <a href="#pricing" class="block py-2 text-gray-700">Pricing</a>
+            <a href="/sample-report-real-estate-final.html" target="_blank" class="block py-2 text-gray-700">Sample Report</a>
+            <a href="#login" class="block py-2 text-purple-600 font-semibold">Login</a>
+        </div>
+    </div>
+</nav>
+
 <!-- Multi-Step Free Trial Modal -->
 <div id="freeTrialModal" class="modal">
-    <div class="modal-content glass-modal rounded-3xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden">
+    <div class="modal-content glass-card rounded-3xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden">
         <div class="gradient-bg p-6 text-white">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold">Start Your 7-Day Free Trial</h3>
@@ -460,7 +725,6 @@
                     </svg>
                 </button>
             </div>
-            <!-- Progress Bar -->
             <div class="progress-bar">
                 <div id="progressFill" class="progress-fill" style="width: 16.66%"></div>
             </div>
@@ -468,7 +732,6 @@
         </div>
         
         <form id="freeTrialForm" class="p-6">
-            <!-- Step 1: Name -->
             <div class="form-step active" data-step="1">
                 <h4 class="text-2xl font-bold text-gray-900 mb-2">Hi! What's your name?</h4>
                 <p class="text-gray-600 mb-6">Let's get to know you.</p>
@@ -484,7 +747,6 @@
                 </button>
             </div>
 
-            <!-- Step 2: Email -->
             <div class="form-step" data-step="2">
                 <h4 class="text-2xl font-bold text-gray-900 mb-2">Nice to meet you, <span id="nameDisplay" class="gradient-text">there</span>!</h4>
                 <p class="text-gray-600 mb-6">What's your email address?</p>
@@ -507,7 +769,6 @@
                 </div>
             </div>
 
-            <!-- Step 3: Topic -->
             <div class="form-step" data-step="3">
                 <h4 class="text-2xl font-bold text-gray-900 mb-2">What topic keeps you up at night?</h4>
                 <p class="text-gray-600 mb-6">Choose what you want to master.</p>
@@ -543,7 +804,6 @@
                 </div>
             </div>
 
-            <!-- Step 4: Role -->
             <div class="form-step" data-step="4">
                 <h4 class="text-2xl font-bold text-gray-900 mb-2">What's your current role?</h4>
                 <p class="text-gray-600 mb-6">This helps us personalize your report.</p>
@@ -564,7 +824,6 @@
                 </div>
             </div>
 
-            <!-- Step 5: Context -->
             <div class="form-step" data-step="5">
                 <h4 class="text-2xl font-bold text-gray-900 mb-2">Why does this topic matter to you?</h4>
                 <p class="text-gray-600 mb-6">Help us understand what you're trying to achieve.</p>
@@ -585,7 +844,6 @@
                 </div>
             </div>
 
-            <!-- Step 6: Goals & Frequency -->
             <div class="form-step" data-step="6">
                 <h4 class="text-2xl font-bold text-gray-900 mb-2">Almost done!</h4>
                 <p class="text-gray-600 mb-6">What are you hoping to get out of this?</p>
@@ -635,16 +893,12 @@
                 </p>
             </div>
 
-            <!-- Loading State -->
             <div id="loadingState" class="form-step" data-step="7">
-                <div class="ai-thinking py-12">
-                    <div class="ai-orb"></div>
-                    <div class="thinking-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                <div class="py-12 text-center">
+                    <div class="inline-block w-16 h-16 mb-6">
+                        <div class="gia-core"></div>
                     </div>
-                    <p class="text-xl font-semibold text-gray-700">AI is preparing your first report...</p>
+                    <p class="text-xl font-semibold text-gray-700 mb-2">AI is preparing your first report...</p>
                     <p class="text-sm text-gray-500">Scanning <span class="counter" data-target="247">0</span> sources</p>
                 </div>
             </div>
@@ -654,7 +908,7 @@
 
 <!-- Success Modal -->
 <div id="successModal" class="modal">
-    <div class="success-modal-content glass-modal rounded-3xl shadow-2xl max-w-md w-full mx-4 p-8 text-center">
+    <div class="success-modal-content glass-card rounded-3xl shadow-2xl max-w-md w-full mx-4 p-8 text-center">
         <div class="success-checkmark">
             <svg fill="none" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
@@ -680,7 +934,6 @@
 <section id="hero" class="pt-24 sm:pt-32 pb-16 sm:pb-24 gradient-bg overflow-hidden relative" style="min-height: 100vh;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center">
-            <!-- Urgency Badge -->
             <div class="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold mb-6 urgency-badge" data-aos="fade-down">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
@@ -745,7 +998,6 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <!-- Testimonial 1 -->
             <div class="testimonial-card glass-card p-6 rounded-xl shadow-lg card-hover" data-aos="fade-up" data-aos-delay="100">
                 <div class="flex items-start gap-1 mb-4">
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -771,7 +1023,6 @@
                 </div>
             </div>
 
-            <!-- Testimonial 2 -->
             <div class="testimonial-card glass-card p-6 rounded-xl shadow-lg card-hover" data-aos="fade-up" data-aos-delay="200">
                 <div class="flex items-start gap-1 mb-4">
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -797,7 +1048,6 @@
                 </div>
             </div>
 
-            <!-- Testimonial 3 -->
             <div class="testimonial-card glass-card p-6 rounded-xl shadow-lg card-hover" data-aos="fade-up" data-aos-delay="300">
                 <div class="flex items-start gap-1 mb-4">
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -875,7 +1125,7 @@
     </div>
 </section>
 
-<!-- Pricing Section - FIXED GLASS EFFECT -->
+<!-- Pricing Section -->
 <section class="py-16 sm:py-24 bg-white" id="pricing">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 sm:mb-16" data-aos="fade-up">
@@ -888,7 +1138,6 @@
         </div>
 
         <div class="max-w-3xl mx-auto">
-            <!-- Main Pricing Card - SOLID GRADIENT, NO GLASS -->
             <div class="pricing-card bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 sm:p-12 text-white mb-8" data-aos="fade-up" data-aos-delay="100">
                 <div class="text-center mb-8">
                     <div class="inline-block bg-white/20 px-4 py-2 rounded-full text-sm font-bold mb-4">
@@ -924,11 +1173,10 @@
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
                         <div>
-                            <div class="font-semibold text-lg">8-minute read saves 5+ hours of research</div>
-                            <div class="text-purple-100 text-sm">Get your Sunday back. Actually enjoy your weekends.</div>
+                                <div class="font-semibold text-lg">8-minute read saves 5+ hours of research</div>
+                                <div class="text-purple-100 text-sm">Get your Sunday back. Actually enjoy your weekends.</div>
+                            </div>
                         </div>
-                    </div>
-
                     <div class="flex items-start gap-3">
                         <svg class="w-6 h-6 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -949,7 +1197,6 @@
                 </p>
             </div>
 
-            <!-- Pro Tier Teaser -->
             <div class="glass-card bg-gray-50 rounded-2xl p-8 text-center border-2 border-gray-200" data-aos="fade-up" data-aos-delay="200">
                 <h4 class="text-2xl font-bold text-gray-900 mb-2">Need More Than One Topic?</h4>
                 <p class="text-gray-600 mb-4">Pro: $29/month — Track up to 5 topics, choose your delivery day, 3 on-demand reports/month</p>
@@ -959,7 +1206,6 @@
             </div>
         </div>
 
-        <!-- Money-Back Guarantee -->
         <div class="mt-12 text-center" data-aos="fade-up" data-aos-delay="300">
             <div class="inline-block glass-card bg-green-50 border-2 border-green-200 rounded-2xl px-8 py-6 max-w-2xl">
                 <div class="flex items-center justify-center gap-3 mb-2">
@@ -1027,9 +1273,31 @@
         offset: 100
     });
 
-    // Initialize Vanta.js Waves Background
+    // ===== DARK MODE TOGGLE =====
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Re-initialize Vanta with new theme
+        setTimeout(initVanta, 100);
+    });
+
+    // ===== VANTA.JS BACKGROUND =====
     let vantaEffect;
-    setTimeout(() => {
+
+    function initVanta() {
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        
+        if (vantaEffect) {
+            vantaEffect.destroy();
+        }
+        
         vantaEffect = VANTA.WAVES({
             el: "#hero",
             mouseControls: true,
@@ -1039,15 +1307,55 @@
             minWidth: 200.00,
             scale: 1.00,
             scaleMobile: 1.00,
-            color: 0x1a0b2e,
+            color: isDark ? 0x1a0b2e : 0x2a1b3e,
             shininess: 30.00,
             waveHeight: 15.00,
             waveSpeed: 0.75,
             zoom: 0.65
         });
-    }, 100);
+    }
 
-    // Animated Counter
+    setTimeout(initVanta, 100);
+
+    // ===== GIA AMBIENT INTERACTIONS =====
+    const ambientGIA = document.getElementById('ambientGIA');
+
+    ambientGIA.addEventListener('click', function() {
+        // Create ripple effect
+        const ripple = document.createElement('div');
+        ripple.className = 'gia-ripple';
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 1000);
+        
+        // Toggle active state
+        this.classList.toggle('active');
+        
+        setTimeout(() => {
+            this.classList.remove('active');
+        }, 3000);
+    });
+
+    // ===== LOGO REVEAL ANIMATION =====
+    const logoReveal = document.getElementById('logoReveal');
+
+    // Trigger reveal on page load
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            logoReveal.classList.add('revealing');
+            
+            // Revert back after animation
+            setTimeout(() => {
+                logoReveal.classList.remove('revealing');
+            }, 4000);
+        }, 1000);
+    });
+
+    // Optional: Trigger on logo click
+    logoReveal.addEventListener('click', function() {
+        this.classList.toggle('revealing');
+    });
+
+    // ===== ANIMATED COUNTER =====
     function animateCounter(element) {
         const target = parseInt(element.getAttribute('data-target'));
         const duration = 2000;
@@ -1081,7 +1389,7 @@
         counterObserver.observe(counter);
     });
 
-    // Live Activity Feed
+    // ===== LIVE ACTIVITY FEED =====
     const activities = [
         "Sarah from Seattle just started a trial",
         "Mike from Austin upgraded to Pro",
@@ -1109,7 +1417,7 @@
     setInterval(showActivity, 8000);
     setTimeout(showActivity, 3000);
 
-    // Multi-Step Form Logic
+    // ===== MULTI-STEP FORM LOGIC =====
     let currentStep = 1;
     const totalSteps = 6;
 
@@ -1166,19 +1474,6 @@
         const prevStepEl = document.querySelector(`.form-step[data-step="${currentStep}"]`);
         prevStepEl.classList.add('active');
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const emailInput = document.getElementById('email');
-        
-        emailInput.addEventListener('blur', function() {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (emailRegex.test(this.value)) {
-                this.parentElement.classList.add('input-valid');
-            } else {
-                this.parentElement.classList.remove('input-valid');
-            }
-        });
-    });
 
     document.getElementById('topic').addEventListener('change', function() {
         const customDiv = document.getElementById('customTopicDiv');
@@ -1287,4 +1582,3 @@
 </script>
 </body>
 </html>
-</artifact>
