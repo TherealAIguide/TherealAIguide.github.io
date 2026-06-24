@@ -1,4 +1,3 @@
-<artifact identifier="ai-guide-complete-gia-integration" type="text/html" title="The AI Guide - Complete GIA Integration">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -696,6 +695,7 @@ body {
                 <a href="#testimonials" class="text-gray-700 hover:text-purple-600 transition font-medium">Testimonials</a>
                 <a href="#pricing" class="text-gray-700 hover:text-purple-600 transition font-medium">Pricing</a>
                 <a href="/sample-report-real-estate-final.html" target="_blank" class="text-gray-700 hover:text-purple-600 transition font-medium">Sample Report</a>
+                <a href="/wordforge/" target="_blank" class="text-gray-700 hover:text-purple-600 transition font-medium">Play WordForge</a>
                 <a href="#login" class="cta-button bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-semibold">Login</a>
             </div>
             <button onclick="toggleMenu()" class="md:hidden text-gray-700">
@@ -708,6 +708,7 @@ body {
             <a href="#testimonials" class="block py-2 text-gray-700">Testimonials</a>
             <a href="#pricing" class="block py-2 text-gray-700">Pricing</a>
             <a href="/sample-report-real-estate-final.html" target="_blank" class="block py-2 text-gray-700">Sample Report</a>
+            <a href="/wordforge/" target="_blank" class="block py-2 text-gray-700">Play WordForge</a>
             <a href="#login" class="block py-2 text-purple-600 font-semibold">Login</a>
         </div>
     </div>
@@ -917,6 +918,41 @@ body {
         <h3 class="text-3xl font-bold text-gray-900 mb-3">Welcome aboard!</h3>
         <p class="text-lg text-gray-700 mb-6">Your first report arrives this Sunday. Check your email for confirmation.</p>
         <button onclick="closeSuccessModal()" class="cta-button animated-gradient text-white px-8 py-3 rounded-full font-bold text-lg glow">
+            Got it!
+        </button>
+    </div>
+</div>
+
+<!-- Pro Waitlist Modal -->
+<div id="proWaitlistModal" class="modal">
+    <div class="modal-content glass-card rounded-3xl shadow-2xl max-w-md w-full mx-4 p-8 text-center">
+        <div class="flex justify-end mb-2">
+            <button type="button" onclick="closeProWaitlistModal()" class="text-gray-400 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">Join the Pro Waitlist</h3>
+        <p class="text-gray-600 mb-6">Pro is limited to keep reports high quality. Drop your email and we will let you know the moment a spot opens.</p>
+        <form id="proWaitlistForm">
+            <input type="email" id="proWaitlistEmail" required class="form-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg outline-none transition mb-4" placeholder="your@email.com">
+            <button type="submit" class="cta-button w-full animated-gradient text-white py-4 rounded-full font-bold text-lg glow">Join Waitlist</button>
+        </form>
+    </div>
+</div>
+
+<!-- Pro Waitlist Success Modal -->
+<div id="proWaitlistSuccessModal" class="modal">
+    <div class="success-modal-content glass-card rounded-3xl shadow-2xl max-w-md w-full mx-4 p-8 text-center">
+        <div class="success-checkmark">
+            <svg fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+        </div>
+        <h3 class="text-3xl font-bold text-gray-900 mb-3">You're on the list!</h3>
+        <p class="text-lg text-gray-700 mb-6">We'll email you the moment a Pro spot opens up.</p>
+        <button onclick="closeProWaitlistSuccessModal()" class="cta-button animated-gradient text-white px-8 py-3 rounded-full font-bold text-lg glow">
             Got it!
         </button>
     </div>
@@ -1200,7 +1236,7 @@ body {
             <div class="glass-card bg-gray-50 rounded-2xl p-8 text-center border-2 border-gray-200" data-aos="fade-up" data-aos-delay="200">
                 <h4 class="text-2xl font-bold text-gray-900 mb-2">Need More Than One Topic?</h4>
                 <p class="text-gray-600 mb-4">Pro: $29/month — Track up to 5 topics, choose your delivery day, 3 on-demand reports/month</p>
-                <button onclick="alert('Waitlist opening soon! Start with Basic for now.')" class="cta-button bg-gray-900 text-white px-8 py-3 rounded-full font-bold">
+                <button onclick="openProWaitlistModal()" class="cta-button bg-gray-900 text-white px-8 py-3 rounded-full font-bold">
                     Join Pro Waitlist — 47 Spots Left
                 </button>
             </div>
@@ -1527,6 +1563,54 @@ body {
         if (e.target === this) {
             closeSuccessModal();
         }
+    });
+
+    function openProWaitlistModal() {
+        const modal = document.getElementById('proWaitlistModal');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeProWaitlistModal() {
+        const modal = document.getElementById('proWaitlistModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function closeProWaitlistSuccessModal() {
+        const modal = document.getElementById('proWaitlistSuccessModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('proWaitlistModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeProWaitlistModal();
+        }
+    });
+
+    document.getElementById('proWaitlistSuccessModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeProWaitlistSuccessModal();
+        }
+    });
+
+    document.getElementById('proWaitlistForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('proWaitlistEmail').value;
+
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'pro_waitlist', email: email })
+        }).catch(err => console.log('Pro waitlist submit error (no-cors, expected to not read response):', err));
+
+        closeProWaitlistModal();
+        document.getElementById('proWaitlistEmail').value = '';
+        const successModal = document.getElementById('proWaitlistSuccessModal');
+        successModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
     });
     
     document.getElementById('freeTrialForm').addEventListener('submit', async function(e) {
